@@ -1,0 +1,10 @@
+fastapi==0.115.6
+uvicorn==0.34.0
+python-multipart==0.0.20
+mediapipe==0.10.20
+joblib==1.4.2
+boto3==1.35.97
+scikit-learn==1.6.1
+pandas 
+numpy 
+movipy==1.0.3
