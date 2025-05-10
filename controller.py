@@ -1,6 +1,6 @@
 from s3_download import download_s3_file
 from s3_upload import upload_to_s3
-from excercise_intensity import get_excercise_intensity_values
+from excercise_intensity import get_exercise_predictions
 from meal_plan_prediction import predict_meal_plan
 from sport_analysis import  analyze_arm_angles
 import os 
@@ -65,7 +65,7 @@ def get_meal_plan(meal_plan:MealPlanInput):
 
 @router.post("/get-exercise-intensity")
 def get_exercise_intensity_level(exercise_intensity:ExerciseIntensity):
-     intensity_level = get_excercise_intensity_values(
+     intensity_level = get_exercise_predictions(
           actual_weight=exercise_intensity.actual_weight , 
           age=exercise_intensity.age , 
           gender=exercise_intensity.gender , 

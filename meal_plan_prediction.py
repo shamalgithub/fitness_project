@@ -3,7 +3,7 @@ import pandas as pd
 
 
 model = joblib.load('models/meal_plan_prediction_model.joblib')
-df = pd.read_csv("recipies.csv")
+df = pd.read_excel("nutrition.xlsx")
 
 
 def predict_meal_plan(age, weight, height, bmi, bmr, activity_level, gender , number_of_meals , number_of_options):
@@ -64,7 +64,7 @@ def predict_meal_plan(age, weight, height, bmi, bmr, activity_level, gender , nu
 #         activity_level=activity_level,
 #         gender=gender , 
 #         number_of_meals=3 , 
-#         number_of_options=10
+#         number_of_options=15
 #     )
     
     

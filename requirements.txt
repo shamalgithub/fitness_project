@@ -8,3 +8,4 @@ scikit-learn==1.6.1
 pandas 
 numpy 
 movipy==1.0.3
+openpyxl

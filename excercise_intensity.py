@@ -3,56 +3,101 @@ import numpy as np
 import joblib
 import os
 
+# Define the list of exercises based on the training data
+exercise_list = [
+    "Burpees", 
+    "Diamond Push Ups", 
+    "High Knees", 
+    "Squats", 
+    "Sit Ups", 
+    "Jumping Lunges", 
+    "Lunges", 
+    "Jumping Squats", 
+    "Push Ups", 
+    "Leg Raises"
+]
 
-def predict_exercise_intensity(exercise, actual_weight, age, gender, duration, bmi, height, weather, 
-                               model_path="models/exercise_intensity_model.joblib"):
+def get_exercise_predictions(gender, age, weight, height, bmi, duration, models_dir="models/fitness"):
+    """
+    A single function that predicts Set Count, Rep Count, and Intensity Rate for all exercises.
 
-    # Load the model
-    model = joblib.load(model_path)
+    Parameters:
+    gender: 'Male' or 'Female' (str)
+    age: Age of person (int)
+    weight: Weight in kg (float)
+    height: Height in cm (float)
+    bmi: Body Mass Index (float)
+    duration: Duration of exercise in minutes (int/float)
+    models_dir: Directory containing the saved model files (str)
+
+    Returns:
+    Dictionary with exercise names as keys and prediction dictionaries as values
+    """
+    # Load the models
+    set_count_model_path = os.path.join(models_dir, "set_count_model.joblib")
+    rep_count_model_path = os.path.join(models_dir, "rep_count_model.joblib")
+    intensity_model_path = os.path.join(models_dir, "intensity_rate_model.joblib")
     
-    # Create a dataframe with the input features
-    input_data = pd.DataFrame({
-        'Exercise': [exercise],
-        'Actual Weight': [actual_weight],
-        'Age': [age],
-        'Gender': [gender],
-        'Duration': [duration],
-        'BMI': [bmi],
-        'Height (m)': [height],
-        'Weather Conditions': [weather]
-    })
+    set_count_model = joblib.load(set_count_model_path)
+    rep_count_model = joblib.load(rep_count_model_path)
+    intensity_model = joblib.load(intensity_model_path)
     
-    # Make prediction
-    prediction = model.predict(input_data)
-    return prediction[0]
-
-
-def get_excercise_intensity_values(actual_weight , age , gender , duration , bmi , height , weather):
-
-    excercise_list = ["Exercise 1" , "Exercise 2" , "Exercise 3" , "Exercise 4" , "Exercise 5" , "Exercise 6" , "Exercise 7" , "Exercise 8" , "Exercise 9" , "Exercise 10"]
-    result = []
-    for i in excercise_list:
-        intensity = predict_exercise_intensity(
-                exercise=i,          
-                actual_weight=actual_weight,
-                age=age,
-                gender=gender,
-                duration=duration,
-                bmi=bmi,
-                height=height,
-                weather=weather
-            )
-        # Convert numpy.int64 to standard Python int
-        if isinstance(intensity, np.integer):
-            intensity = int(intensity)
-        # Convert numpy.float64 to standard Python float
-        elif isinstance(intensity, np.floating):
-            intensity = float(intensity)
+    # Dictionary to store results
+    results = {}
+    
+    # Make predictions for each exercise
+    for exercise in exercise_list:
+        # Create a dataframe with the input features
+        input_data = pd.DataFrame({
+            'Exercise Name': [exercise],
+            'Gender': [gender],
+            'Age': [age],
+            'Weight': [weight],
+            'Height': [height],
+            'BMI': [bmi],
+            'Duration': [duration]
+        })
         
-        result.append({i: intensity})
-   
+        # Make predictions
+        set_count_pred = set_count_model.predict(input_data)[0]
+        rep_count_pred = rep_count_model.predict(input_data)[0]
+        intensity_pred = intensity_model.predict(input_data)[0]
+        
+        # Round set count and rep count to integers
+        set_count_pred_rounded = round(set_count_pred)
+        rep_count_pred_rounded = round(rep_count_pred)
+        
+        # Store predictions in dictionary
+        results[exercise] = {
+            'Set Count': set_count_pred_rounded,
+            'Rep Count': rep_count_pred_rounded,
+            'Intensity Rate': intensity_pred
+        }
     
-    return result
+    return results
+
+# Example usage
+if __name__ == "__main__":
+    # Person details
+    gender = 'Male'
+    age = 30
+    weight = 75.0
+    height = 175.0
+    bmi = 24.5
+    duration = 45
+    
+    # Get predictions for all exercises as a dictionary
+    predictions = get_exercise_predictions(
+        gender=gender,
+        age=age,
+        weight=weight,
+        height=height,
+        bmi=bmi,
+        duration=duration
+    )
+    
+    # Print the raw dictionary
+    print(predictions)
 
 
     
