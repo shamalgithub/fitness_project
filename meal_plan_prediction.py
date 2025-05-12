@@ -21,14 +21,14 @@ def predict_meal_plan(age, weight, height, bmi, bmr, activity_level, gender , nu
         'gender_F': gender_F,
         'gender_M': gender_M,
     }
-
     # Convert user input to DataFrame
     user_df = pd.DataFrame([user_inputs])
 
     # Make prediction
     predicted_calories = model.predict(user_df)
-
+    
     suggested_meals = df[df['calories']<predicted_calories[0]/number_of_meals].head(number_of_options)
+    suggested_meals = suggested_meals.fillna('')
     suggested_meals_list = suggested_meals.to_dict(orient='records')
 
     return {"total_calories":round(predicted_calories[0] , 2) , "calories_per_meal":round(predicted_calories[0]/number_of_meals , 2) , "suggested":suggested_meals_list}
