@@ -26,7 +26,7 @@ class ExerciseIntensity(BaseModel):
      duration:int 
      bmi:float
      height:float 
-     weather:str 
+    #  weather:str 
 
 class SportAnalysis(BaseModel):
      correct_video:str 
@@ -66,13 +66,13 @@ def get_meal_plan(meal_plan:MealPlanInput):
 @router.post("/get-exercise-intensity")
 def get_exercise_intensity_level(exercise_intensity:ExerciseIntensity):
      intensity_level = get_exercise_predictions(
-          actual_weight=exercise_intensity.actual_weight , 
+          weight=exercise_intensity.actual_weight , 
           age=exercise_intensity.age , 
           gender=exercise_intensity.gender , 
           duration=exercise_intensity.duration , 
           bmi=exercise_intensity.bmi , 
           height=exercise_intensity.height,
-          weather=exercise_intensity.weather
+        #   weather=exercise_intensity.weather
      )
 
      return intensity_level
